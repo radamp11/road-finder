@@ -1,0 +1,26 @@
+.header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.left-container {
+    float: left;
+    padding: 10px;
+}
+
+.right-container {
+    float: right;
+    padding: 10px;
+}
+
+.button {
+    position: absolute;
+    right: 10px;
+    padding: 10px;
+}
+
+.spinner {
+    position: absolute;
+    right: 10px;
+    padding: 10px;
+}

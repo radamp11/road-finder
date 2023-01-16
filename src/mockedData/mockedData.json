@@ -1,0 +1,36 @@
+[
+    {
+        "id": "10",
+        "osm_id": "27280483",
+        "eout": null,
+        "lon": "16.05719510",
+        "lat": "52.56027120",
+        "cnt": null,
+        "chk": null,
+        "ein": null,
+        "the_geom": "0101000020E6100000D0FD8B56A40E3040027278F7B6474A40"
+    },
+    {
+        "id": "7",
+        "osm_id": "27165208",
+        "eout": null,
+        "lon": "18.42106710",
+        "lat": "52.17442090",
+        "cnt": null,
+        "chk": null,
+        "ein": null,
+        "the_geom": "0101000020E6100000EBEBAF0DCB6B3240949E8E6C53164A40"
+    },
+    {
+        "id": "8",
+        "osm_id": "27165352",
+        "eout": null,
+        "lon": "19.06540960",
+        "lat": "52.14596060",
+        "cnt": null,
+        "chk": null,
+        "ein": null,
+        "the_geom": "0101000020E61000002DD8FCAEBE10334095C041D6AE124A40"
+    }
+
+]
