@@ -17,14 +17,6 @@ const corsOptions ={
 
 app.use(cors(corsOptions)) // Use this after the variable declaration
 
-// const endpoints = {
-//     closestPointEndpoint: '/points/closest',
-//     shortestKPathsOnDistanceEndpoint: '/routes/shortest/distance',
-//     shortestKPathsOnTimeEndpointNoLimit: '/routes/shortest/time/no',
-//     shortestKPathsOnTimeEndpointSingleLimit: '/routes/shortest/time/single',
-//     shortestKPathsOnTimeEndpointManyLimits: '/routes/shortest/time/many'
-// }
-
 const getCurrentDateTime = () => {
     return new Date(Date.now()).toISOString() + ' '
 }
