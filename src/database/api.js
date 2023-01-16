@@ -1,4 +1,6 @@
 const client = require('./connection.js')
+const endpoints = require('./contract.js')
+const defaultWays = require('./contract.js')
 
 const express = require('express')
 const app = express()
@@ -15,13 +17,13 @@ const corsOptions ={
 
 app.use(cors(corsOptions)) // Use this after the variable declaration
 
-const endpoints = {
-    closestPointEndpoint: '/points/closest',
-    shortestKPathsOnDistanceEndpoint: '/routes/shortest/distance',
-    shortestKPathsOnTimeEndpointNoLimit: '/routes/shortest/time/no',
-    shortestKPathsOnTimeEndpointSingleLimit: '/routes/shortest/time/single',
-    shortestKPathsOnTimeEndpointManyLimits: '/routes/shortest/time/many'
-}
+// const endpoints = {
+//     closestPointEndpoint: '/points/closest',
+//     shortestKPathsOnDistanceEndpoint: '/routes/shortest/distance',
+//     shortestKPathsOnTimeEndpointNoLimit: '/routes/shortest/time/no',
+//     shortestKPathsOnTimeEndpointSingleLimit: '/routes/shortest/time/single',
+//     shortestKPathsOnTimeEndpointManyLimits: '/routes/shortest/time/many'
+// }
 
 const getCurrentDateTime = () => {
     return new Date(Date.now()).toISOString() + ' '
@@ -293,7 +295,7 @@ app.post(endpoints.shortestKPathsOnTimeEndpointManyLimits, (req, res) => {
             ways.way1.edges.push(results[0].rows[i].edge)
         }
         for(let i = 0; i < results[1].rows.length; i++){
-            if(i === results[0].rows.length - 1)
+            if(i === results[1].rows.length - 1)
                 ways.way2.cost = results[1].rows[i].agg_cost
             ways.way2.edges.push(results[1].rows[i].edge)
         }
@@ -313,19 +315,38 @@ app.post(endpoints.shortestKPathsOnTimeEndpointManyLimits, (req, res) => {
 
         let wayQueryList = []
 
-        if(params.noOfRoads === 3){
+        if(params.noOfRoads === 3 && way3Query !== null && way2Query !== null && way1Query !== null){
             wayQueryList = [
                 client.query(way1Query),
                 client.query(way2Query),
                 client.query(way3Query),
             ]
         }
-        else {
+        else if(way2Query !== null && way1Query !== null){
             wayQueryList = [
                 client.query(way1Query),
                 client.query(way2Query)
             ]
         }
+        else {
+            console.warn(getCurrentDateTime(), 'WARNING: Given queries returned empty result list: \n', queryWay1, '\n', queryWay2, '\n', queryWay3)
+            return res.send({
+                way1: {
+                    edges: [],
+                    cost: null
+                },
+                way2: {
+                    edges: [],
+                    cost: null
+                },
+                way3: {
+                    edges: [],
+                    cost: null
+                }
+            })
+        }
+        // console.log('queries: \n', way1Query, '\n', way2Query, '\n', way3Query)
+        // console.log(wayQueryList)
         Promise.all(wayQueryList).then(function(results){
             ways.way1.edges = results[0].rows.map(point => [[point.y1, point.x1],[point.y2, point.x2]])
             ways.way2.edges = results[1].rows.map(point => [[point.y1, point.x1],[point.y2, point.x2]])
@@ -476,7 +497,7 @@ app.post(endpoints.closestPointEndpoint, (req, res) => {
 })
 
 app.listen(3300, () => {
-    console.log('server listening at port 3300');
+    console.log('...\nserver listening at port 3300');
 })
 
 client.connect()

@@ -2,33 +2,26 @@ import React, { useState, useEffect } from 'react'
 import './App.css';
 import MyMap from './map/MyMap.js'
 import Header from './components/Header.js'
-// import { endpoints } from './database/api'
 
-const defaultWays = {
-  way1: {
-      edges: [],
-      cost: null
-  },
-  way2: {
-      edges: [],
-      cost: null
-  },
-  way3: {
-      edges: [],
-      cost: null
-  } 
-}
 
 function App() {
-  const endpoints = {
-    closestPointEndpoint: '/points/closest',
-    shortestKPathsOnDistanceEndpoint: '/routes/shortest/distance',
-    shortestKPathsOnTimeEndpointNoLimit: '/routes/shortest/time/no',
-    shortestKPathsOnTimeEndpointSingleLimit: '/routes/shortest/time/single',
-    shortestKPathsOnTimeEndpointManyLimits: '/routes/shortest/time/many'
-  }
-
+  const endpoints = require('./database/contract.js')
   const apiServer = 'http://127.0.0.1:3300'
+  // const apiServer = 'http://25.56.64.63:3300'
+  const defaultWays = {
+    way1: {
+        edges: [],
+        cost: null
+    },
+    way2: {
+        edges: [],
+        cost: null
+    },
+    way3: {
+        edges: [],
+        cost: null
+    } 
+  }  
   
   const [noOfRoads, setNoOfRoads] = useState(1)
   const [limit1, setLimit1] = useState(0)
@@ -45,6 +38,17 @@ function App() {
   const [clicked, setClicked] = useState(false)
 
   const [ways, setWays] = useState(defaultWays)
+  const [emptyResult, setEmptyResult] = useState(false)
+
+
+  const isWayEmpty = (route) => {
+    return route.way1.edges.length === 0 &&
+            route.way2.edges.length === 0 &&
+            route.way3.edges.length === 0 &&
+            route.way1.cost === null &&
+            route.way2.cost === null &&
+            route.way3.cost === null;
+  }
 
   const runAlgorithm = () => {
     setClicked(true)
@@ -72,6 +76,9 @@ function App() {
         })
         .then(closestRoutes => {
           // console.log("new closest route: ", closestRoutes)
+          if(isWayEmpty(closestRoutes)){
+            setEmptyResult(true)
+          }
           setWays(closestRoutes)
           setIsLoading(false)
         })
@@ -105,6 +112,9 @@ function App() {
     })
     .then(closestRoutes => {
       // console.log("new closest route: ", closestRoutes)
+      if(isWayEmpty(closestRoutes)){
+        setEmptyResult(true)
+      }
       setWays(closestRoutes)
       setIsLoading(false)
     })
@@ -139,6 +149,9 @@ function App() {
     })
     .then(closestRoutes => {
       // console.log("new closest route: ", closestRoutes)
+      if(isWayEmpty(closestRoutes)){
+        setEmptyResult(true)
+      }
       setWays(closestRoutes)
       setIsLoading(false)
     })
@@ -153,11 +166,6 @@ function App() {
     const requestBody = {
       startId: parseInt(start[0].id),
       targetId: parseInt(target[0].id),
-      speedLimits: {
-        limit1: limit1,
-        limit2: limit2,
-        limit3: limit3
-      },
       noOfRoads: noOfRoads
     }
     setIsLoading(true)
@@ -176,6 +184,9 @@ function App() {
     })
     .then(closestRoutes => {
       // console.log("new closest route: ", closestRoutes)
+      if(isWayEmpty(closestRoutes)){
+        setEmptyResult(true)
+      }
       setWays(closestRoutes)
       setIsLoading(false)
     })
@@ -315,6 +326,8 @@ function App() {
         start={startPosApp} 
         target={targetPosApp} 
         ways={ways}
+        emptyResult={emptyResult}
+        setEmptyResult={setEmptyResult}
         clickSend={runAlgorithm}>
       </Header>
       <MyMap 

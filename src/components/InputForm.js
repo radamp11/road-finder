@@ -12,7 +12,7 @@ const InputForm = (props) => {
         <Row>
             <Col>
             <Form.Group className="mb-3" controlId="noOfRoads">
-                <Form.Label size="sm" >Ilość dróg</Form.Label>
+                <Form.Label size="sm" >Liczba dróg</Form.Label>
                 <Form.Control 
                     size="sm" 
                     type="number" 
@@ -50,8 +50,8 @@ const InputForm = (props) => {
                         }
                     }
                 />
-                <Form.Text color={'green'} >
-                    {props.ways.way1.length !== 0 && props.ways.way1.cost !== null? 'Koszt: ' + props.ways.way1.cost.toFixed(2) : ''}
+                <Form.Text style={{color:'green'}} >
+                    {props.ways.way1.length !== 0 && props.ways.way1.cost !== null? 'Koszt: ' + props.ways.way1.cost.toFixed(2) + (props.timePriority ? ' min' : ' km') : ''}
                 </Form.Text>
             </Form.Group>
             </Col>
@@ -74,8 +74,8 @@ const InputForm = (props) => {
                             props.setLimit2(parseInt(e.target.value))
                     }}
                 />
-                <Form.Text color={'blue'}>
-                    {props.ways.way2.length !== 0 && props.ways.way2.cost !== null? 'Koszt: ' + props.ways.way2.cost.toFixed(2) : ''}
+                <Form.Text style={{color:'blue'}}>
+                    {props.ways.way2.length !== 0 && props.ways.way2.cost !== null? 'Koszt: ' + props.ways.way2.cost.toFixed(2) + (props.timePriority ? ' min' : ' km') : ''}
                 </Form.Text>
             </Form.Group>
             </Col>
@@ -99,7 +99,7 @@ const InputForm = (props) => {
                     }}
                 />
                 <Form.Text style={{color:'red'}}>
-                    {props.ways.way3.length !== 0 && props.ways.way3.cost !== null? 'Koszt: ' + props.ways.way3.cost.toFixed(2) : ''}
+                    {props.ways.way3.length !== 0 && props.ways.way3.cost !== null? 'Koszt: ' + props.ways.way3.cost.toFixed(2) + (props.timePriority ? ' min' : ' km') : ''}
                 </Form.Text>
             </Form.Group>
             </Col>

@@ -4,10 +4,23 @@ import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import LoadingSpinner from './Spinner';
 import InputForm from './InputForm';
+import Modal from 'react-bootstrap/Modal'
 import './Header.css'
 
 const Header = (props) => {
-    // const [query, setQuery] = useState();
+    
+    const EmptyResultNotification = () => {
+        return props.emptyResult ? (
+            <div>
+                <Modal show={props.emptyResult}>
+
+                </Modal>
+            </div>
+        ) :
+        <div/>
+    }
+
+    const handleClose = () => props.setEmptyResult(false)
 
     return (
         <Navbar className={'header'} bg="light" expand="lg">
@@ -29,6 +42,14 @@ const Header = (props) => {
             </Container>
             <Container className={'right-container'}>
                 {props.isLoading ? <LoadingSpinner className={'spinner'}/> : null}
+                <Modal show={props.emptyResult} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Nie znaleziono drogi</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        Nie udało się znaleźć drogi dla zadanych punktów. Spróbuj wybrać inne punkty w pobliżu.
+                    </Modal.Body>
+                </Modal>
                 <Button 
                     className={'button'}
                     onClick={() => props.clickSend()}
