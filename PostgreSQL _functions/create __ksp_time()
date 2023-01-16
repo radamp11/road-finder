@@ -1,0 +1,44 @@
+-- FUNCTION: public.__ksp_time(bigint, bigint, integer)
+
+-- DROP FUNCTION IF EXISTS public.__ksp_time(bigint, bigint, integer);
+
+CREATE OR REPLACE FUNCTION public.__ksp_time(
+	start_id bigint,
+	target_id bigint,
+	route_num integer)
+    RETURNS TABLE(edge bigint, agg_cost double precision) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+DECLARE sql_statement text;
+BEGIN
+sql_statement := CONCAT(
+	'SELECT gid AS id,
+		source,
+		target,
+		CASE
+			WHEN one_way=-1 THEN length_m * -1
+			ELSE length_m
+		END / 1000 * 60 / maxspeed_forward AS cost,
+		CASE
+			WHEN one_way=1 THEN length_m * -1
+			ELSE length_m
+		END / 1000 * 60 / maxspeed_backward AS reverse_cost
+	  FROM ways;
+	'
+);
+RETURN QUERY SELECT pgr_KSP.edge, pgr_KSP.agg_cost FROM pgr_ksp(
+	sql_statement,
+	start_id,
+	target_id,
+	route_num,
+	directed := true
+);
+END;
+$BODY$;
+
+ALTER FUNCTION public.__ksp_time(bigint, bigint, integer)
+    OWNER TO spdbuser;
