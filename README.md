@@ -1,3 +1,5 @@
+To start Node.js server, go to src/database directory and run `node api.js`
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
